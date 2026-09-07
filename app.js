@@ -6,7 +6,20 @@ const port = process.env.MIPUERTO || 3003;
 const sistemaArchivo =require("fs");
 const path = require("path");
 const rutaArchivo = path.join(__dirname, "datos.json");
-const multed = require("multer");
+//importar multer
+const multer = require("multer");
+//almacenamiento de archivos
+const storage = multer.diskStorage({
+    destination: (req, file, cb)=> {
+        cb(null, "imagenes/");
+    },
+    filename: (req, file, cb) => {
+        const extension = path.extname(file.originalname);
+        cb(null, `${Date.now()}${extension}`);
+    }
+})
+
+const upload = multer({storage: storage});
 
 
 
@@ -27,15 +40,19 @@ app.get('/api/aprendices', (req, res) => {
     });
 
 
-app.post('/api/aprendices', (req, res) => {
+app.post('/api/aprendices', upload.single('imagen'), (req, res) => {
 
-    
+    const datosAprendiz = req.body
+
+    datosAprendiz.imagen = req.file? `/imagenes/${req.file.filename}` : "sin imagen";
+
+
     sistemaArchivo.readFile(rutaArchivo, "utf-8", (error, datos) => {
         if (error) res.status(500).json({error: 'Error al leer el archivo'})
-            const listaAprendices = JSON.parse(datos)
-        
-        const datosAprendiz = req.body
+    
 
+    const listaAprendices = JSON.parse(datos)
+        
     listaAprendices.push(datosAprendiz)
 
     sistemaArchivo.writeFile(rutaArchivo, JSON.stringify(listaAprendices, null, 2), (error) => {
@@ -43,6 +60,8 @@ app.post('/api/aprendices', (req, res) => {
         res.status(201).json({mensaje: 'Aprendiz agregado correctamente', datos: datosAprendiz})
         })
     })
+
+
 });
 
 

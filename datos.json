@@ -20,5 +20,26 @@
   {
     "nombre": "pedro ",
     "edad": "12"
+  },
+  {
+    "nombre": "sofa",
+    "edad": "23",
+    "correo": "correo@g.xom",
+    "clave": "1234",
+    "imagen": "/imagenes/1788797261207"
+  },
+  {
+    "nombre": "sofad",
+    "edad": "232",
+    "correo": "correo@g.xom",
+    "clave": "1234",
+    "imagen": "/imagenes/1788797693901.jpg"
+  },
+  {
+    "nombre": "sofadw",
+    "edad": "232",
+    "correo": "correo@g.xom",
+    "clave": "1234",
+    "imagen": "/imagenes/1788797716832.jpg"
   }
 ]
