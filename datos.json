@@ -1,3 +1,24 @@
 [
-    {"nombre": "Juan", "edad": 30, "correo": "juan@example.com", "imagen": "url", "clave": "123456"}
+  {
+    "nombre": "Juan",
+    "edad": 30,
+    "correo": "juan@example.com",
+    "imagen": "url",
+    "clave": "123456"
+  },
+  null,
+  {
+    "nombre": "Pedro",
+    "edad": 25,
+    "correo": "pedro@example.com",
+    "imagen": "url_de_prueba",
+    "clave": "654321"
+  },
+  {
+    "nombre": "pedro "
+  },
+  {
+    "nombre": "pedro ",
+    "edad": "12"
+  }
 ]

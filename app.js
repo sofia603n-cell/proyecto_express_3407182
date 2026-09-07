@@ -6,23 +6,48 @@ const port = process.env.MIPUERTO || 3003;
 const sistemaArchivo =require("fs");
 const path = require("path");
 const rutaArchivo = path.join(__dirname, "datos.json");
+const multed = require("multer");
 
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.get("/", (_, res) => {
     res.send("API Rest Full con express");
 });
 
 app.get('/api/aprendices', (req, res) => {
-    sistemaArchivo.readFile(rutaArchivo, 'utf-8', (error, data) => {
+    sistemaArchivo.readFile(rutaArchivo, "utf-8", (error, datos) => {
     if(error)res.status(500).json({error: 'Error al leer el archivo'});
-    const listaAprendices = JSON.parse(data);
+    const listaAprendices = JSON.parse(datos);
     res.status(200).json({aprendices: listaAprendices });
     });
-});
+
+   
+    });
+
 
 app.post('/api/aprendices', (req, res) => {
-     const datosAprendiz = req.body
-    res.status(201).json({ mensaje: 'Aprendiz creado', datos: datosAprendiz});
+
+    
+    sistemaArchivo.readFile(rutaArchivo, "utf-8", (error, datos) => {
+        if (error) res.status(500).json({error: 'Error al leer el archivo'})
+            const listaAprendices = JSON.parse(datos)
+        
+        const datosAprendiz = req.body
+
+    listaAprendices.push(datosAprendiz)
+
+    sistemaArchivo.writeFile(rutaArchivo, JSON.stringify(listaAprendices, null, 2), (error) => {
+        if (error) res.status(500).json({error: 'Error al escribir el archivo'})
+        res.status(201).json({mensaje: 'Aprendiz agregado correctamente', datos: datosAprendiz})
+        })
+    })
 });
+
+
+
+
 
 app.patch('/api/aprendices/:id_aprendiz', (req, res) => {
     res.status(200).json({ mensaje: 'Aprendiz actualizado'});
