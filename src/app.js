@@ -20,15 +20,7 @@ app.get('/', (req, res) => {
     res.send("api rest 3407182 en funcionamiento")
 })
 
-const express = require('express');
-const app = express();
 
-// Middleware para leer JSON
-app.use(express.json());
-
-// Importar e integrar rutas de usuarios
-const usuarioRoutes = require('./routes/usuarioRoutes');
-app.use('/api/usuarios', usuarioRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
