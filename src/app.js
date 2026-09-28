@@ -1,7 +1,6 @@
 require("dotenv")
 const express =  require('express')
 
-
 const app = express()
 
 //importar los middleware
@@ -20,19 +19,9 @@ app.get('/', (req, res) => {
     res.send("api rest 3407182 en funcionamiento")
 })
 
-const express = require('express');
-const app = express();
 
-// Middleware para leer JSON
-app.use(express.json());
-
-// Importar e integrar rutas de usuarios
+//Ruta usuario
 const usuarioRoutes = require('./routes/usuarioRoutes');
 app.use('/api/usuarios', usuarioRoutes);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
-});
 
 module.exports = app
