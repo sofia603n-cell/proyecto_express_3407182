@@ -7,20 +7,23 @@ const ruta = require("path")
 const rutaMiArchivo = ruta.join(__dirname, "datos.json")
 
 // importar validaciones
-const usuarioSchema = require("./validaciones/usuarioSchema")
-const validarCampos = require("./validaciones/validarCampos")
+const usuarioSchema = require("./src/validar/usuarioSchema")
+const validarCampos = require("./src/validar/validarCampos")
 
 const app = express();
 const PORT = process.env.PORT || 3003;
-const registroMiddleware = require("./middleware/registroMiddleware")
-const manejadorErroresMiddleware = require("./middleware/manejadorErroresMiddleware")
+const registroMiddleware = require("./src/middleware/registroMiddleware")
+const manejadorErroresMiddleware = require("./src/middleware/manejadorErroresMiddleware")
+const autenticacionMiddleware = require("./src/middleware/auntenticacionMiddleware")
+const jwt= require('jsonwebtoken');
+
+
 // middleware para parsear el body de las peticiones
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // usar nuestros middlewares
 app.use(registroMiddleware);
-
 // importar multer para manejar archivos
 const multer = require("multer")
 // almacenamiento 
@@ -59,6 +62,7 @@ app.post('/api/aprendices', subir.single("imagen"), validarCampos(usuarioSchema)
     datosAprendiz.id = datosAprendiz.id || Date.now().toString();
     
     datosAprendiz.imagen = req.file ? `/misImagenes/${req.file.filename}` : "sin imagen"
+
     
     // se lee el archivo y se verifica la unicidad del ID
     sistemaArchivo.readFile(rutaMiArchivo, "utf-8", (error, datos) => {
@@ -156,6 +160,32 @@ app.post('/api/aprendices/login', (req, res) => {
 app.get('/api/error', (req, res, next) => {
     next(new Error('Error provocado'));
 })
+
+
+
+app.get("/api/rutaprotegida", autenticacionMiddleware,(req,res)=>{
+    res.json({mensaje:"Ruta protegida, acceso permitido con token"})
+})
+
+app.post("/api/login",(req,res)=>{
+    const {usuario, clave, correo} = req.body;
+
+    const dbU= {"usuario":"admin", "clave":"1234", "correo":"admin@example.com"}
+
+    if (usuario !== dbU.usuario || clave !== dbU.clave || correo !== dbU.correo) {
+        return res.status(401).json({mensaje:"usuario, clave o correo incorrectos"})
+    }
+
+    //verificacion y generacion de token
+    const token = jwt.sign(
+        {"user": req.usuario},
+        process.env.JWT_SECRETO,
+        {expiresIn: "1h"}
+    )
+    res.json({token})
+})
+
+
 
 app.use(manejadorErroresMiddleware);
 
